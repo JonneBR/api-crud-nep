@@ -5,8 +5,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon ./server/server.js localhost 3333",
-    "test": "jest --env node"
+    "test": "jest --watchAll --setupFiles dotenv/config"
   },
+"jest": {
+    "testEnvironment": "node"
+},
   "dependencies": {
     "axios": "^0.27.0",
     "dotenv": "^16.0.0",
