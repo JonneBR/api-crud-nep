@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon ./server/server.js localhost 3333",
-    "test": "jest --watchAll --setupFiles dotenv/config"
+    "test": "jest --detectOpenHandles --watchAll --setupFiles dotenv/config "
   },
 "jest": {
     "testEnvironment": "node"

@@ -10,3 +10,7 @@ exports.savePost = function (post) {
     [post.title, post.content]
   );
 };
+
+exports.deletePost = function (id) {
+  return database.none("delete from blog.post where id = $1", [id]);
+};
