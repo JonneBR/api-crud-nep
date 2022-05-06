@@ -7,7 +7,7 @@ const generate = function () {
 };
 
 const request = function (url, method, data) {
-  return axios({ url, method, data });
+  return axios({ url, method, data, validateStatus: false });
 };
 
 test("Should get posts", async function () {
@@ -30,28 +30,21 @@ test("Should save a post", async function () {
   const data = { title: generate(), content: generate() };
   const response = await request("http://localhost:3333/posts", "post", data);
   const post = response.data;
-
+  expect(response.status).toBe(201);
   expect(post.title).toBe(data.title);
   expect(post.content).toBe(data.content);
 
   await postsService.deletePost(post.id);
 });
 
-test("Should update a post", async function () {
-  const post = await postsService.savePost({
-    title: generate(),
-    content: generate(),
-  });
-  post.title = generate();
-  post.content = generate();
-  await request(`http://localhost:3333/posts/${post.id}`, "put", post);
-
-  const updatePost = await postsService.getPost(post.id);
-
-  expect(updatePost.title).toBe(post.title);
-  expect(updatePost.content).toBe(post.content);
-
-  await postsService.deletePost(post.id);
+test.only("Should not update a post", async function () {
+  const post = { id: 1 };
+  const response = await request(
+    `http://localhost:3333/posts/${post.id}`,
+    "put",
+    post
+  );
+  expect(response.status).toBe(404);
 });
 
 test("Should delete a post", async function () {
@@ -60,7 +53,12 @@ test("Should delete a post", async function () {
     content: generate(),
   });
 
-  await request(`http://localhost:3333/posts/${post.id}`, "delete");
+  const response = await request(
+    `http://localhost:3333/posts/${post.id}`,
+    "delete"
+  );
+  expect(response.status).toBe(204);
+
   const posts = await postsService.getPosts();
   expect(posts).toHaveLength(0);
 });
